@@ -7,12 +7,12 @@ A Java desktop application for managing employees, departments, and attendance â
 - **Employee Management**: Add, update, view, and soft-delete (mark as resigned) employees
 - **Department Management**: Full CRUD for departments
 - **Attendance Tracking**: Real login/logout style tracking
-    - Mark login (one entry per employee per day)
-    - Mark logout (updates the same day's record)
-    - View who's currently logged in
-    - View attendance history with automatic hours-worked calculation
+  - Mark login (one entry per employee per day)
+  - Mark logout (updates the same day's record)
+  - View who's currently logged in
+  - View attendance history with automatic hours-worked calculation
 - **Referential Integrity**: Foreign key constraints prevent orphaned attendance records; employees are soft-deleted (status flag) instead of removed, preserving historical data
-- **Two interfaces**: Console (menu-driven) and Swing GUI (tabbed)
+- **Two interfaces**: Console (menu-driven) and Swing GUI (tabbed, color-themed)
 
 ## Tech Stack
 
@@ -47,7 +47,7 @@ All database operations use **PreparedStatements** to prevent SQL injection.
 ## Setup
 
 1. Clone this repo
-2. Create the MySQL database and tables (see below)
+2. Create the MySQL database and tables using `sql/schema.sql`
 3. Copy `config.properties.example`, rename the copy to `config.properties`, and fill in your own MySQL credentials
 4. Open in IntelliJ, add MySQL Connector/J to project dependencies
 5. Run `Main.java` for console mode, or `MainFrame.java` for GUI mode
