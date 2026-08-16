@@ -17,6 +17,12 @@ public class DepartmentPanel extends JPanel {
 
         tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Head"}, 0);
         table = new JTable(tableModel);
+        table.setRowHeight(28);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table.setSelectionBackground(new Color(174, 214, 241));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        table.getTableHeader().setBackground(new Color(52, 73, 94));
+        table.getTableHeader().setForeground(Color.WHITE);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel formPanel = new JPanel(new GridLayout(3, 2, 5, 5));
@@ -32,10 +38,10 @@ public class DepartmentPanel extends JPanel {
         formPanel.add(headField);
 
         JPanel buttonPanel = new JPanel();
-        JButton refreshBtn = new JButton("Refresh");
-        JButton addBtn = new JButton("Add");
-        JButton updateBtn = new JButton("Update");
-        JButton deleteBtn = new JButton("Delete");
+        JButton refreshBtn = styledButton("Refresh", new Color(52, 152, 219));
+        JButton addBtn = styledButton("Add", new Color(46, 204, 113));
+        JButton updateBtn = styledButton("Update", new Color(241, 196, 15));
+        JButton deleteBtn = styledButton("Delete", new Color(231, 76, 60));
 
         buttonPanel.add(refreshBtn);
         buttonPanel.add(addBtn);
@@ -69,7 +75,12 @@ public class DepartmentPanel extends JPanel {
         deleteBtn.addActionListener(e -> {
             int deptId = Integer.parseInt(idField.getText());
             boolean success = departmentDAO.deleteDepartment(deptId);
-            JOptionPane.showMessageDialog(this, success ? "Deleted!" : "Failed.");
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Deleted!");
+            } else {
+                JOptionPane.showMessageDialog(this, departmentDAO.getLastError(),
+                        "Delete Failed", JOptionPane.ERROR_MESSAGE);
+            }
             refreshTable();
         });
 
@@ -83,11 +94,28 @@ public class DepartmentPanel extends JPanel {
         });
     }
 
+    JButton styledButton(String text, Color bgColor) {
+        JButton btn = new JButton(text);
+        btn.setBackground(bgColor);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        return btn;
+    }
+
     void refreshTable() {
         tableModel.setRowCount(0);
         List<Department> departments = departmentDAO.getAllDepartments();
         for (Department d : departments) {
             tableModel.addRow(new Object[]{d.getDeptId(), d.getDeptName(), d.getDeptHead()});
         }
+        clearFields();
+    }
+
+    void clearFields() {
+        idField.setText("");
+        nameField.setText("");
+        headField.setText("");
     }
 }

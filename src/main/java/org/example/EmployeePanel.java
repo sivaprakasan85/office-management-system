@@ -15,13 +15,17 @@ public class EmployeePanel extends JPanel {
     public EmployeePanel() {
         setLayout(new BorderLayout());
 
-        // Table setup
-        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Email", "Phone", "Designation", "Salary","Status"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Email", "Phone", "Designation", "Salary", "Status"}, 0);
         table = new JTable(tableModel);
+        table.setRowHeight(28);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table.setSelectionBackground(new Color(174, 214, 241));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        table.getTableHeader().setBackground(new Color(52, 73, 94));
+        table.getTableHeader().setForeground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Form panel
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
         idField = new JTextField();
         nameField = new JTextField();
@@ -43,12 +47,11 @@ public class EmployeePanel extends JPanel {
         formPanel.add(new JLabel("Salary:"));
         formPanel.add(salaryField);
 
-        // Buttons panel
         JPanel buttonPanel = new JPanel();
-        JButton refreshBtn = new JButton("Refresh");
-        JButton addBtn = new JButton("Add");
-        JButton updateBtn = new JButton("Update");
-        JButton deleteBtn = new JButton("mark as resigned");
+        JButton refreshBtn = styledButton("Refresh", new Color(52, 152, 219));
+        JButton addBtn = styledButton("Add", new Color(46, 204, 113));
+        JButton updateBtn = styledButton("Update", new Color(241, 196, 15));
+        JButton deleteBtn = styledButton("Mark as Resigned", new Color(231, 76, 60));
 
         buttonPanel.add(refreshBtn);
         buttonPanel.add(addBtn);
@@ -60,10 +63,8 @@ public class EmployeePanel extends JPanel {
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Load data initially
         refreshTable();
 
-        // Button actions
         refreshBtn.addActionListener(e -> refreshTable());
 
         addBtn.addActionListener(e -> {
@@ -97,7 +98,6 @@ public class EmployeePanel extends JPanel {
             refreshTable();
         });
 
-        // Click a row to auto-fill the form (for easy update/delete)
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();
             if (row != -1) {
@@ -111,13 +111,33 @@ public class EmployeePanel extends JPanel {
         });
     }
 
+    JButton styledButton(String text, Color bgColor) {
+        JButton btn = new JButton(text);
+        btn.setBackground(bgColor);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        return btn;
+    }
+
     void refreshTable() {
-        tableModel.setRowCount(0); // clear existing rows
+        tableModel.setRowCount(0);
         List<Employee> employees = employeeDAO.getAllEmployees();
         for (Employee e : employees) {
             tableModel.addRow(new Object[]{e.getEmpId(), e.getName(), e.getEmail(),
                     e.getPhone(), e.getDesignation(), e.getSalary(), e.getStatus()});
         }
+        clearFields();
+    }
+
+    void clearFields() {
+        idField.setText("");
+        nameField.setText("");
+        emailField.setText("");
+        phoneField.setText("");
+        designationField.setText("");
+        salaryField.setText("");
     }
 
     void showResult(boolean success, String action) {

@@ -65,6 +65,12 @@ public class DepartmentDAO {
         }
     }
 
+    private String lastError = "";
+
+    public String getLastError() {
+        return lastError;
+    }
+
     public boolean deleteDepartment(int deptId) {
         String sql = "DELETE FROM Departments WHERE dept_id = ?";
 
@@ -72,9 +78,15 @@ public class DepartmentDAO {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, deptId);
+            lastError = "";
             return pstmt.executeUpdate() > 0;
 
+        } catch (SQLIntegrityConstraintViolationException e) {
+            lastError = "Cannot delete: employees are still assigned to this department. Reassign or remove them first.";
+            return false;
+
         } catch (SQLException e) {
+            lastError = "Delete failed due to a database error.";
             e.printStackTrace();
             return false;
         }
