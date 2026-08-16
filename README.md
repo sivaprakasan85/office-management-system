@@ -33,6 +33,19 @@ All database operations use **PreparedStatements** to prevent SQL injection.
 - **Employees**: emp_id, name, email, phone, designation, salary, date_of_joining, dept_id (FK), status
 - **Attendance**: attendance_id, emp_id (FK), login_time, logout_time, work_date
 
+  ## Screenshots
+
+### Employee Management
+![Employee Panel](screenshots/ss1.png)
+
+### Department Management
+![Department Panel](screenshots/ss2.png)
+
+### Attendance Tracking
+![Attendance Panel](screenshots/ss3.png)
+
+## Database Schema
+
 ## Setup
 
 1. Clone this repo
